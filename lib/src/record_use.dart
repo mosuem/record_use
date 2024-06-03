@@ -17,17 +17,18 @@ extension type UsageRecord(RecordUses _recordUses) {
 
   /// Finds all arguments for the call to the [definition].
   Iterable<Arguments>? argumentsForCallsTo(Identifier definition) =>
-      _recordUses.calls?.entries
-          .firstWhereOrNull((call) => call.key.identifier == definition)
-          ?.value
+      _recordUses.calls
+          ?.firstWhereOrNull((call) => call.definition.identifier == definition)
+          ?.references
           .map((reference) => reference.arguments);
 
   /// Finds all instances of the  [definition].
   Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
     Identifier definition,
   ) =>
-      _recordUses.instances?.entries
-          .firstWhereOrNull((instance) => instance.key.identifier == definition)
-          ?.value
+      _recordUses.instances
+          ?.firstWhereOrNull(
+              (instance) => instance.definition.identifier == definition)
+          ?.references
           .map((reference) => reference.fields);
 }

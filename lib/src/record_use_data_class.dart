@@ -10,8 +10,8 @@ import 'reference.dart';
 
 class RecordUses {
   final Metadata metadata;
-  final Map<Definition, List<CallReference>>? calls;
-  final Map<Definition, List<InstanceReference>>? instances;
+  final List<Uses<CallReference>>? calls;
+  final List<Uses<InstanceReference>>? instances;
 
   RecordUses({
     required this.metadata,
@@ -24,57 +24,41 @@ class RecordUses {
         .whereType<Map<String, dynamic>>()
         .map(Identifier.fromJson)
         .toList();
-
-    final callsJson = json['calls'] as Map<String, dynamic>;
-    final calls = {
-      Definition.fromJson(
-        callsJson['definition'] as Map<String, dynamic>,
-        identifiers,
-      ): (callsJson['references'] as List)
-          .map((x) => CallReference.fromJson(x as Map<String, dynamic>))
-          .toList(),
-    };
-
-    final instancesJson = json['instances'] as Map<String, dynamic>;
-    final instances = {
-      Definition.fromJson(
-        instancesJson['definition'] as Map<String, dynamic>,
-        identifiers,
-      ): (instancesJson['references'] as List)
-          .map((x) => InstanceReference.fromJson(x as Map<String, dynamic>))
-          .toList(),
-    };
     return RecordUses(
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
-      calls: calls,
-      instances: instances,
+      calls: (json['methodCalls'] as List)
+          .map((x) => Uses.fromJson(
+                x as Map<String, dynamic>,
+                identifiers,
+                CallReference.fromJson,
+              ))
+          .toList(),
+      instances: (json['constantInstances'] as List)
+          .map((x) => Uses.fromJson(
+                x as Map<String, dynamic>,
+                identifiers,
+                InstanceReference.fromJson,
+              ))
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    final identifiers = [
-      if (calls != null) ...calls!.keys,
-      if (instances != null) ...instances!.keys,
-    ].map((definition) => definition.identifier).toList();
+    final identifiers = <Identifier>[
+      if (calls != null) ...calls!.map((call) => call.definition.identifier),
+      if (instances != null)
+        ...instances!.map((instance) => instance.definition.identifier),
+    ];
     return {
       'metadata': metadata.toJson(),
       'identifiers':
           identifiers.map((identifier) => identifier.toJson()).toList(),
       if (calls != null)
-        'calls': calls!.entries
-            .map((entry) => {
-                  'definition': entry.key.toJson(identifiers),
-                  'references':
-                      entry.value.map((reference) => reference.toJson())
-                })
-            .toList(),
+        'methodCalls':
+            calls!.map((reference) => reference.toJson(identifiers)).toList(),
       if (instances != null)
-        'instances': instances!.entries
-            .map((entry) => {
-                  'definition': entry.key.toJson(identifiers),
-                  'references':
-                      entry.value.map((reference) => reference.toJson())
-                })
+        'constantInstances': instances!
+            .map((reference) => reference.toJson(identifiers))
             .toList(),
     };
   }
