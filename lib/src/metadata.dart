@@ -1,4 +1,4 @@
-import 'package:version/version.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 class Metadata {
   final String? comment;

@@ -1,6 +1,6 @@
+import 'package:pub_semver/pub_semver.dart';
 import 'package:record_use/record_use_internal.dart';
 import 'package:test/test.dart';
-import 'package:version/version.dart';
 
 void main() {
   test('First Test', () {
@@ -13,7 +13,7 @@ void main() {
 
 final recordedUses = RecordUses(
   metadata: Metadata(
-    version: Version(1, 6, 2, preRelease: ['wip'], build: '5.-.2.z'),
+    version: Version(1, 6, 2, pre: 'wip', build: '5.-.2.z'),
     timestamp: DateTime.fromMillisecondsSinceEpoch(321432153),
     comment:
         'Recorded references at compile time and their argument values, as far'
