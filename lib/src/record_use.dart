@@ -8,6 +8,7 @@ import 'arguments.dart';
 import 'base.dart';
 import 'metadata.dart';
 import 'record_use_data_class.dart';
+import 'reference.dart';
 
 extension type UsageRecord(RecordUses _recordUses) {
   UsageRecord._(this._recordUses);
@@ -15,14 +16,19 @@ extension type UsageRecord(RecordUses _recordUses) {
   /// Show the metadata for this recording of usages.
   Metadata get metadata => _recordUses.metadata;
 
-  /// Finds all arguments for the call to the [definition].
+  /// Finds all arguments for calls to the [definition].
+  ///
+  /// The definition must be annotated with `@RecordMethodUse`. If there are no
+  /// calls to the definition, either because it was treeshaken, because it
+  /// was not annotated, or because it does not exist, returns `false`.
   Iterable<Arguments>? argumentsForCallsTo(Identifier definition) =>
-      _recordUses.calls
-          ?.firstWhereOrNull((call) => call.definition.identifier == definition)
-          ?.references
-          .map((reference) => reference.arguments);
+      _callTo(definition)?.references.map((reference) => reference.arguments);
 
-  /// Finds all instances of the  [definition].
+  /// Finds all fields of a const construction of the class at [definition].
+  ///
+  /// The definition must be annotated with `@RecordAnnotationUse`. If there are
+  /// no instances of the definition, either because it was treeshaken, because
+  /// it was not annotated, or because it does not exist, returns `null`.
   Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
     Identifier definition,
   ) =>
@@ -31,4 +37,22 @@ extension type UsageRecord(RecordUses _recordUses) {
               (instance) => instance.definition.identifier == definition)
           ?.references
           .map((reference) => reference.fields);
+
+  /// Checks if any call to [definition] has non-const arguments.
+  ///
+  /// The definition must be annotated with `@RecordMethodUse`. If there are no
+  /// calls to the definition, either because it was treeshaken, because it
+  /// was not annotated, or because it does not exist, returns `false`.
+  bool hasNonConstArguments(Identifier definition) =>
+      _callTo(definition)?.references.any(
+        (element) {
+          final nonConstArguments = element.arguments.nonConstArguments;
+          return nonConstArguments?.named?.isNotEmpty ??
+              false || (nonConstArguments?.positional?.isNotEmpty ?? false);
+        },
+      ) ??
+      false;
+
+  Uses<CallReference>? _callTo(Identifier definition) => _recordUses.calls
+      ?.firstWhereOrNull((call) => call.definition.identifier == definition);
 }
