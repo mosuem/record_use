@@ -28,7 +28,7 @@ sealed class Reference {
 }
 
 final class CallReference extends Reference {
-  final Arguments arguments;
+  final Arguments? arguments;
 
   const CallReference({
     required this.arguments,
@@ -38,17 +38,22 @@ final class CallReference extends Reference {
 
   factory CallReference.fromJson(Map<String, dynamic> json) {
     return CallReference(
-      arguments: Arguments.fromJson(json['arguments'] as Map<String, dynamic>),
+      arguments: json['arguments'] != null
+          ? Arguments.fromJson(json['arguments'] as Map<String, dynamic>)
+          : null,
       loadingUnit: json['loadingUnit'] as String?,
       location: Location.fromJson(json['@'] as Map<String, dynamic>),
     );
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-        'arguments': arguments.toJson(),
-        ...super.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    final argumentJson = arguments?.toJson() ?? {};
+    return {
+      if (argumentJson.isNotEmpty) 'arguments': argumentJson,
+      ...super.toJson(),
+    };
+  }
 
   @override
   bool operator ==(Object other) {

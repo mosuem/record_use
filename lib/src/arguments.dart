@@ -1,13 +1,14 @@
 import 'package:collection/collection.dart';
 
 class Arguments {
-  ConstArguments? constArguments;
-  NonConstArguments? nonConstArguments;
+  ConstArguments constArguments;
+  NonConstArguments nonConstArguments;
 
   Arguments({
-    this.constArguments,
-    this.nonConstArguments,
-  });
+    ConstArguments? constArguments,
+    NonConstArguments? nonConstArguments,
+  })  : constArguments = constArguments ?? ConstArguments(),
+        nonConstArguments = nonConstArguments ?? NonConstArguments();
 
   factory Arguments.fromJson(Map<String, dynamic> json) {
     final constJson = json['const'] as Map<String, dynamic>?;
@@ -21,10 +22,16 @@ class Arguments {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        if (constArguments != null) 'const': constArguments!.toJson(),
-        if (nonConstArguments != null) 'nonConst': nonConstArguments!.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    final hasConst =
+        constArguments.named.isNotEmpty || constArguments.positional.isNotEmpty;
+    final hasNonConst = nonConstArguments.named.isNotEmpty ||
+        nonConstArguments.positional.isNotEmpty;
+    return {
+      if (hasConst) 'const': constArguments.toJson(),
+      if (hasNonConst) 'nonConst': nonConstArguments.toJson(),
+    };
+  }
 
   @override
   bool operator ==(Object other) {
@@ -40,19 +47,25 @@ class Arguments {
 }
 
 class ConstArguments {
-  Map<String, dynamic>? positional;
-  Map<String, dynamic>? named;
+  Map<String, dynamic> positional;
+  Map<String, dynamic> named;
 
-  ConstArguments({this.positional, this.named});
+  ConstArguments(
+      {Map<String, dynamic>? positional, Map<String, dynamic>? named})
+      : named = named ?? {},
+        positional = positional ?? {};
 
   factory ConstArguments.fromJson(Map<String, dynamic> json) => ConstArguments(
-        positional: json['positional'] as Map<String, dynamic>?,
-        named: json['named'] as Map<String, dynamic>?,
+        positional: json['positional'] != null
+            ? json['positional'] as Map<String, dynamic>
+            : {},
+        named:
+            json['named'] != null ? json['named'] as Map<String, dynamic> : {},
       );
 
   Map<String, dynamic> toJson() => {
-        if (positional != null) 'positional': positional!,
-        if (named != null) 'named': named!,
+        if (positional.isNotEmpty) 'positional': positional,
+        if (named.isNotEmpty) 'named': named,
       };
 
   @override
@@ -70,20 +83,24 @@ class ConstArguments {
 }
 
 class NonConstArguments {
-  List<dynamic>? positional;
-  List<String>? named; // Assuming named arguments are strings (keys)
+  List<dynamic> positional;
+  List<String> named; // Assuming named arguments are strings (keys)
 
-  NonConstArguments({this.positional, this.named});
+  NonConstArguments({List? positional, List<String>? named})
+      : named = named ?? [],
+        positional = positional ?? [];
 
   factory NonConstArguments.fromJson(Map<String, dynamic> json) =>
       NonConstArguments(
-        positional: json['positional'] as List,
-        named: json['named'] as List<String>?,
+        positional: json['positional'] != null
+            ? json['positional'] as List<dynamic>
+            : [],
+        named: json['named'] != null ? json['named'] as List<String> : [],
       );
 
   Map<String, dynamic> toJson() => {
-        if (positional != null) 'positional': positional!,
-        if (named != null) 'named': named!,
+        if (positional.isNotEmpty) 'positional': positional,
+        if (named.isNotEmpty) 'named': named,
       };
 
   @override

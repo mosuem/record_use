@@ -20,9 +20,14 @@ extension type UsageRecord(RecordUses _recordUses) {
   ///
   /// The definition must be annotated with `@RecordMethodUse`. If there are no
   /// calls to the definition, either because it was treeshaken, because it
-  /// was not annotated, or because it does not exist, returns `false`.
+  /// was not annotated, or because it does not exist, returns `null`.
+  ///
+  /// Returns an empty list if the arguments were not collected.
   Iterable<Arguments>? argumentsForCallsTo(Identifier definition) =>
-      _callTo(definition)?.references.map((reference) => reference.arguments);
+      _callTo(definition)
+          ?.references
+          .map((reference) => reference.arguments)
+          .whereType<Arguments>();
 
   /// Finds all fields of a const construction of the class at [definition].
   ///
@@ -45,10 +50,12 @@ extension type UsageRecord(RecordUses _recordUses) {
   /// was not annotated, or because it does not exist, returns `false`.
   bool hasNonConstArguments(Identifier definition) =>
       _callTo(definition)?.references.any(
-        (element) {
-          final nonConstArguments = element.arguments.nonConstArguments;
-          return nonConstArguments?.named?.isNotEmpty ??
-              false || (nonConstArguments?.positional?.isNotEmpty ?? false);
+        (reference) {
+          final nonConstArguments = reference.arguments?.nonConstArguments;
+          final hasNamed = nonConstArguments?.named.isNotEmpty ?? false;
+          final hasPositional =
+              nonConstArguments?.positional.isNotEmpty ?? false;
+          return hasNamed || hasPositional;
         },
       ) ??
       false;
