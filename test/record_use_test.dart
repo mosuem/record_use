@@ -7,12 +7,12 @@ void main() {
     expect(recordedUses.toJson(), recordedUsesJson);
   });
   test('First Test', () {
-    expect(RecordUseExtension.fromJson(recordedUsesJson), recordedUses);
+    expect(RecordUses.fromJson(recordedUsesJson), recordedUses);
   });
 }
 
 final recordedUses = RecordUses(
-  metadata: MetadataExtension.build(
+  metadata: Metadata(
     version: Version(1, 6, 2, preRelease: ['wip'], build: '5.-.2.z'),
     timestamp: DateTime.fromMillisecondsSinceEpoch(321432153),
     hashes: Hashes(
