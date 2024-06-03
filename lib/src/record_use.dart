@@ -4,10 +4,10 @@
 
 import 'package:collection/collection.dart';
 
+import 'arguments.dart';
 import 'base.dart';
 import 'metadata.dart';
 import 'record_use_data_class.dart';
-import 'reference.dart';
 
 extension type UsageRecord(RecordUses _recordUses) {
   UsageRecord._(this._recordUses);
@@ -15,16 +15,19 @@ extension type UsageRecord(RecordUses _recordUses) {
   /// Show the metadata for this recording of usages.
   Metadata get metadata => _recordUses.metadata;
 
-  /// Finds all references to the [definition].
-  Iterable<CallReference>? calls(Identifier definition) =>
-      _recordUses.methodCalls
-          ?.firstWhereOrNull((call) => call.definition.identifier == definition)
-          ?.references;
+  /// Finds all arguments for the call to the [definition].
+  Iterable<Arguments>? argumentsForCallsTo(Identifier definition) =>
+      _recordUses.calls?.entries
+          .firstWhereOrNull((call) => call.key.identifier == definition)
+          ?.value
+          .map((reference) => reference.arguments);
 
   /// Finds all instances of the  [definition].
-  Iterable<InstanceReference>? instances(Identifier definition) =>
-      _recordUses.constantInstances
-          ?.firstWhereOrNull(
-              (instance) => instance.definition.identifier == definition)
-          ?.references;
+  Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
+    Identifier definition,
+  ) =>
+      _recordUses.instances?.entries
+          .firstWhereOrNull((instance) => instance.key.identifier == definition)
+          ?.value
+          .map((reference) => reference.fields);
 }

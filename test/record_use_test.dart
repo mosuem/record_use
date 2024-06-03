@@ -19,21 +19,9 @@ final recordedUses = RecordUses(
         'Recorded references at compile time and their argument values, as far'
         ' as known, to definitions annotated with @RecordReference',
   ),
-  constantInstances: [],
-  methodCalls: [
-    MethodCall(
-      annotations: [
-        Annotation(
-          identifier: Identifier(
-            uri:
-                Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart'),
-            name: 'RecordReference',
-          ),
-          fields: {
-            '_metadata': {'key': true}
-          },
-        ),
-      ],
+  instances: [],
+  calls: [
+    Uses(
       definition: Definition(
         identifier: Identifier(
           uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart'),

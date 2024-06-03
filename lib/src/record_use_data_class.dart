@@ -10,13 +10,13 @@ import 'reference.dart';
 
 class RecordUses {
   final Metadata metadata;
-  final List<MethodCall>? methodCalls;
-  final List<ConstantInstance>? constantInstances;
+  final Map<Definition, List<CallReference>>? calls;
+  final Map<Definition, List<InstanceReference>>? instances;
 
   RecordUses({
     required this.metadata,
-    this.methodCalls,
-    this.constantInstances,
+    this.calls,
+    this.instances,
   });
 
   factory RecordUses.fromJson(Map<String, dynamic> json) {
@@ -24,47 +24,57 @@ class RecordUses {
         .whereType<Map<String, dynamic>>()
         .map(Identifier.fromJson)
         .toList();
+
+    final callsJson = json['calls'] as Map<String, dynamic>;
+    final calls = {
+      Definition.fromJson(
+        callsJson['definition'] as Map<String, dynamic>,
+        identifiers,
+      ): (callsJson['references'] as List)
+          .map((x) => CallReference.fromJson(x as Map<String, dynamic>))
+          .toList(),
+    };
+
+    final instancesJson = json['instances'] as Map<String, dynamic>;
+    final instances = {
+      Definition.fromJson(
+        instancesJson['definition'] as Map<String, dynamic>,
+        identifiers,
+      ): (instancesJson['references'] as List)
+          .map((x) => InstanceReference.fromJson(x as Map<String, dynamic>))
+          .toList(),
+    };
     return RecordUses(
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
-      methodCalls: (json['methodCalls'] as List)
-          .map((x) =>
-              MethodCall.fromJson(x as Map<String, dynamic>, identifiers))
-          .toList(),
-      constantInstances: (json['constantInstances'] as List)
-          .map((x) =>
-              ConstantInstance.fromJson(x as Map<String, dynamic>, identifiers))
-          .toList(),
+      calls: calls,
+      instances: instances,
     );
   }
 
   Map<String, dynamic> toJson() {
-    final identifiers = <Identifier>[
-      if (methodCalls != null)
-        ...methodCalls!.expand(
-          (call) => [
-            ...call.annotations.map((annotation) => annotation.identifier),
-            call.definition.identifier,
-          ],
-        ),
-      if (constantInstances != null)
-        ...constantInstances!.expand(
-          (instance) => [
-            ...instance.annotations.map((annotation) => annotation.identifier),
-            instance.definition.identifier,
-          ],
-        ),
-    ];
+    final identifiers = [
+      if (calls != null) ...calls!.keys,
+      if (instances != null) ...instances!.keys,
+    ].map((definition) => definition.identifier).toList();
     return {
       'metadata': metadata.toJson(),
       'identifiers':
           identifiers.map((identifier) => identifier.toJson()).toList(),
-      if (methodCalls != null)
-        'methodCalls': methodCalls!
-            .map((reference) => reference.toJson(identifiers))
+      if (calls != null)
+        'calls': calls!.entries
+            .map((entry) => {
+                  'definition': entry.key.toJson(identifiers),
+                  'references':
+                      entry.value.map((reference) => reference.toJson())
+                })
             .toList(),
-      if (constantInstances != null)
-        'constantInstances': constantInstances!
-            .map((reference) => reference.toJson(identifiers))
+      if (instances != null)
+        'instances': instances!.entries
+            .map((entry) => {
+                  'definition': entry.key.toJson(identifiers),
+                  'references':
+                      entry.value.map((reference) => reference.toJson())
+                })
             .toList(),
     };
   }
@@ -76,44 +86,38 @@ class RecordUses {
 
     return other is RecordUses &&
         other.metadata == metadata &&
-        listEquals(other.methodCalls, methodCalls);
+        listEquals(other.calls, calls);
   }
 
   @override
-  int get hashCode => metadata.hashCode ^ methodCalls.hashCode;
+  int get hashCode => metadata.hashCode ^ calls.hashCode;
 }
 
-class MethodCall {
-  final List<Annotation> annotations;
+class Uses<T extends Reference> {
   final Definition definition;
-  final List<CallReference> references;
+  final List<T> references;
 
-  MethodCall({
-    required this.annotations,
+  Uses({
     required this.definition,
     required this.references,
   });
 
-  factory MethodCall.fromJson(
+  factory Uses.fromJson(
     Map<String, dynamic> json,
     List<Identifier> identifiers,
+    T Function(Map<String, dynamic>) constr,
   ) =>
-      MethodCall(
-        annotations: (json['annotations'] as List)
-            .map((x) =>
-                Annotation.fromJson(x as Map<String, dynamic>, identifiers))
-            .toList(),
+      Uses(
         definition: Definition.fromJson(
           json['definition'] as Map<String, dynamic>,
           identifiers,
         ),
         references: (json['references'] as List)
-            .map((x) => CallReference.fromJson(x as Map<String, dynamic>))
+            .map((x) => constr(x as Map<String, dynamic>))
             .toList(),
       );
 
   Map<String, dynamic> toJson(List<Identifier> identifiers) => {
-        'annotations': annotations.map((x) => x.toJson(identifiers)).toList(),
         'definition': definition.toJson(identifiers),
         'references': references.map((x) => x.toJson()).toList(),
       };
@@ -123,76 +127,13 @@ class MethodCall {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
 
-    return other is MethodCall &&
-        listEquals(other.annotations, annotations) &&
+    return other is Uses &&
         other.definition == definition &&
         listEquals(other.references, references);
   }
 
   @override
-  int get hashCode =>
-      annotations.hashCode ^ definition.hashCode ^ references.hashCode;
-
-  int? hashFor(Identifier id) =>
-      annotations.any((annotation) => annotation.identifier == id)
-          ? definition.hashCode ^ references.hashCode
-          : null;
-}
-
-class ConstantInstance {
-  final List<Annotation> annotations;
-  final Definition definition;
-  final List<InstanceReference> references;
-
-  ConstantInstance({
-    required this.annotations,
-    required this.definition,
-    required this.references,
-  });
-
-  factory ConstantInstance.fromJson(
-    Map<String, dynamic> json,
-    List<Identifier> identifiers,
-  ) =>
-      ConstantInstance(
-        annotations: (json['annotations'] as List)
-            .map((x) =>
-                Annotation.fromJson(x as Map<String, dynamic>, identifiers))
-            .toList(),
-        definition: Definition.fromJson(
-          json['definition'] as Map<String, dynamic>,
-          identifiers,
-        ),
-        references: (json['references'] as List)
-            .map((x) => InstanceReference.fromJson(x as Map<String, dynamic>))
-            .toList(),
-      );
-
-  Map<String, dynamic> toJson(List<Identifier> identifiers) => {
-        'annotations': annotations.map((x) => x.toJson(identifiers)).toList(),
-        'definition': definition.toJson(identifiers),
-        'references': references.map((x) => x.toJson()).toList(),
-      };
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
-
-    return other is MethodCall &&
-        listEquals(other.annotations, annotations) &&
-        other.definition == definition &&
-        listEquals(other.references, references);
-  }
-
-  @override
-  int get hashCode =>
-      annotations.hashCode ^ definition.hashCode ^ references.hashCode;
-
-  int? hashFor(Identifier id) =>
-      annotations.any((annotation) => annotation.identifier == id)
-          ? definition.hashCode ^ references.hashCode
-          : null;
+  int get hashCode => definition.hashCode ^ references.hashCode;
 }
 
 class Annotation {

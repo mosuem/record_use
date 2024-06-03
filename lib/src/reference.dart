@@ -1,7 +1,7 @@
 import 'arguments.dart';
 import 'base.dart';
 
-abstract class Reference {
+sealed class Reference {
   final String? loadingUnit;
   // Represents the "@" field in the JSON
 
@@ -27,7 +27,7 @@ abstract class Reference {
   int get hashCode => loadingUnit.hashCode ^ location.hashCode;
 }
 
-class CallReference extends Reference {
+final class CallReference extends Reference {
   final Arguments arguments;
 
   const CallReference({
@@ -61,7 +61,7 @@ class CallReference extends Reference {
   int get hashCode => arguments.hashCode;
 }
 
-class InstanceReference extends Reference {
+final class InstanceReference extends Reference {
   final Map<String, dynamic> fields;
 
   InstanceReference({
