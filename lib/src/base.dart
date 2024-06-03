@@ -14,13 +14,13 @@ class Definition {
     List<Identifier> identifiers,
   ) =>
       Definition(
-        identifier: identifiers[json['identifier'] as int],
+        identifier: identifiers[json['id'] as int],
         location: Location.fromJson(json['@'] as Map<String, dynamic>),
         loadingUnit: json['loadingUnit'] as String?,
       );
 
   Map<String, dynamic> toJson(List<Identifier> identifiers) => {
-        'identifier': identifiers.indexOf(identifier),
+        'id': identifiers.indexOf(identifier),
         '@': location.toJson(),
         'loadingUnit': loadingUnit,
       };

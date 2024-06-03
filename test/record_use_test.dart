@@ -95,7 +95,7 @@ final recordedUsesJson = {
     {
       'annotations': [
         {
-          'identifier': {
+          'id': {
             'uri': 'file://lib/_internal/js_runtime/lib/js_helper.dart',
             'name': 'RecordReference'
           },
@@ -105,7 +105,7 @@ final recordedUsesJson = {
         }
       ],
       'definition': {
-        'identifier': {
+        'id': {
           'uri': 'file://lib/_internal/js_runtime/lib/js_helper.dart',
           'parent': 'MyClass',
           'name': 'get:loadDeferredLibrary'
