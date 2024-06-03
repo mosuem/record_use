@@ -1,4 +1,4 @@
-import 'package:record_use/record_use.dart';
+import 'package:record_use/record_use_internal.dart';
 import 'package:test/test.dart';
 import 'package:version/version.dart';
 
@@ -7,12 +7,12 @@ void main() {
     expect(recordedUses.toJson(), recordedUsesJson);
   });
   test('First Test', () {
-    expect(RecordUses.fromJson(recordedUsesJson), recordedUses);
+    expect(RecordUseExtension.fromJson(recordedUsesJson), recordedUses);
   });
 }
 
 final recordedUses = RecordUses(
-  metadata: Metadata(
+  metadata: MetadataExtension.build(
     version: Version(1, 6, 2, preRelease: ['wip'], build: '5.-.2.z'),
     timestamp: DateTime.fromMillisecondsSinceEpoch(321432153),
     hashes: Hashes(

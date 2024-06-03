@@ -5,25 +5,13 @@
 import 'package:collection/collection.dart';
 import 'package:version/version.dart';
 
+part 'record_use_internal.dart';
+
 class RecordUses {
   Metadata metadata;
   List<StaticFunctionReference> staticFunctionReferences;
 
   RecordUses({required this.metadata, required this.staticFunctionReferences});
-
-  factory RecordUses.fromJson(Map<String, dynamic> json) => RecordUses(
-        metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
-        staticFunctionReferences: List<StaticFunctionReference>.from(
-            (json['staticFunctionReferences'] as List).map((x) =>
-                StaticFunctionReference.fromJson(x as Map<String, dynamic>))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'metadata': metadata.toJson(),
-        'staticFunctionReferences': staticFunctionReferences
-            .map((reference) => reference.toJson())
-            .toList(),
-      };
 
   @override
   bool operator ==(Object other) {
@@ -45,27 +33,12 @@ class Metadata {
   DateTime timestamp;
   Hashes hashes;
 
-  Metadata({
+  Metadata._({
     this.comment,
     required this.version,
     required this.timestamp,
     required this.hashes,
   });
-
-  factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
-        comment: json['comment'] as String?,
-        version: Version.parse(json['version'] as String),
-        timestamp:
-            DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
-        hashes: Hashes.fromJson(json['hashes'] as Map<String, dynamic>),
-      );
-
-  Map<String, dynamic> toJson() => {
-        if (comment != null) 'comment': comment,
-        'version': version.toString(),
-        'timestamp': timestamp.millisecondsSinceEpoch,
-        'hashes': hashes.toJson(),
-      };
 
   @override
   bool operator ==(Object other) {
@@ -162,6 +135,11 @@ class StaticFunctionReference {
   @override
   int get hashCode =>
       annotations.hashCode ^ definition.hashCode ^ references.hashCode;
+
+  int? hashFor(Identifier id) =>
+      annotations.any((annotation) => annotation.identifier == id)
+          ? definition.hashCode ^ references.hashCode
+          : null;
 }
 
 class Annotation {
