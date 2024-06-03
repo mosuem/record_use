@@ -39,7 +39,7 @@ class Definition {
 }
 
 class Location {
-  Uri uri;
+  String uri;
   int line;
   int column;
   Location({
@@ -50,7 +50,7 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> map) {
     return Location(
-      uri: Uri.parse(map['uri'] as String),
+      uri: map['uri'] as String,
       line: map['line'] as int,
       column: map['column'] as int,
     );
@@ -58,7 +58,7 @@ class Location {
 
   Map<String, dynamic> toJson() {
     return {
-      'uri': uri.toString(),
+      'uri': uri,
       'line': line,
       'column': column,
     };
@@ -79,7 +79,7 @@ class Location {
 }
 
 class Identifier {
-  Uri uri;
+  String uri;
   String? parent; // Optional since not all elements have parents
   String name;
 
@@ -90,13 +90,13 @@ class Identifier {
   });
 
   factory Identifier.fromJson(Map<String, dynamic> json) => Identifier(
-        uri: Uri.parse(json['uri'] as String),
+        uri: json['uri'] as String,
         parent: json['parent'] as String?,
         name: json['name'] as String,
       );
 
   Map<String, dynamic> toJson() => {
-        'uri': uri.toString(),
+        'uri': uri,
         if (parent != null) 'parent': parent,
         'name': name,
       };

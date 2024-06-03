@@ -51,8 +51,8 @@ class ConstArguments {
       );
 
   Map<String, dynamic> toJson() => {
-        'positional': positional,
-        'named': named,
+        if (positional != null) 'positional': positional!,
+        if (named != null) 'named': named!,
       };
 
   @override
@@ -82,8 +82,8 @@ class NonConstArguments {
       );
 
   Map<String, dynamic> toJson() => {
-        'positional': positional,
-        'named': named,
+        if (positional != null) 'positional': positional!,
+        if (named != null) 'named': named!,
       };
 
   @override

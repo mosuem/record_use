@@ -82,12 +82,12 @@ class JObject {}
 class JString {}
 
 final jClassIdid = Identifier(
-  uri: Uri.parse('package:foo/somefile.dart'),
+  uri: Uri.parse('package:foo/somefile.dart').toString(),
   name: 'JClassId',
 );
 
 final jMethodIdid = Identifier(
-  uri: Uri.parse('package:foo/somefile.dart'),
+  uri: Uri.parse('package:foo/somefile.dart').toString(),
   name: 'JMethodId',
 );
 final recordedJUses = RecordUses(
@@ -100,7 +100,7 @@ final recordedJUses = RecordUses(
       definition: Definition(
         identifier: jClassIdid,
         location: Location(
-          uri: Uri.parse('package:foo/somefile.dart'),
+          uri: Uri.parse('package:foo/somefile.dart').toString(),
           line: 50,
           column: 20,
         ),
@@ -108,7 +108,7 @@ final recordedJUses = RecordUses(
       references: [
         InstanceReference(
           location: Location(
-            uri: Uri.parse('package:foo/somefile.dart'),
+            uri: Uri.parse('package:foo/somefile.dart').toString(),
             line: 28,
             column: 20,
           ),
@@ -120,7 +120,7 @@ final recordedJUses = RecordUses(
       definition: Definition(
         identifier: jMethodIdid,
         location: Location(
-          uri: Uri.parse('package:foo/somefile.dart'),
+          uri: Uri.parse('package:foo/somefile.dart').toString(),
           line: 50,
           column: 20,
         ),
@@ -128,7 +128,7 @@ final recordedJUses = RecordUses(
       references: [
         InstanceReference(
           location: Location(
-            uri: Uri.parse('package:foo/somefile.dart'),
+            uri: Uri.parse('package:foo/somefile.dart').toString(),
             line: 15,
             column: 20,
           ),
@@ -140,7 +140,7 @@ final recordedJUses = RecordUses(
         ),
         InstanceReference(
           location: Location(
-            uri: Uri.parse('package:foo/somefile.dart'),
+            uri: Uri.parse('package:foo/somefile.dart').toString(),
             line: 17,
             column: 20,
           ),
@@ -152,7 +152,7 @@ final recordedJUses = RecordUses(
         ),
         InstanceReference(
           location: Location(
-            uri: Uri.parse('package:foo/somefile.dart'),
+            uri: Uri.parse('package:foo/somefile.dart').toString(),
             line: 30,
             column: 20,
           ),

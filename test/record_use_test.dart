@@ -24,12 +24,14 @@ final recordedUses = RecordUses(
     Uses(
       definition: Definition(
         identifier: Identifier(
-          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart'),
+          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+              .toString(),
           parent: 'MyClass',
           name: 'get:loadDeferredLibrary',
         ),
         location: Location(
-          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart'),
+          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+              .toString(),
           line: 12,
           column: 67,
         ),
@@ -45,7 +47,8 @@ final recordedUses = RecordUses(
           ),
           location: Location(
             uri: Uri.parse(
-                'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart'),
+                    'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart')
+                .toString(),
             line: 14,
             column: 49,
           ),
@@ -64,7 +67,8 @@ final recordedUses = RecordUses(
           ),
           location: Location(
             uri: Uri.parse(
-                'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart'),
+                    'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart')
+                .toString(),
             line: 14,
             column: 48,
           ),

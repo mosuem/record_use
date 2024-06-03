@@ -52,10 +52,10 @@ class RecordUses {
     return {
       'metadata': metadata.toJson(),
       'ids': identifiers.map((identifier) => identifier.toJson()).toList(),
-      if (calls != null)
+      if (calls != null && calls!.isNotEmpty)
         'methodCalls':
             calls!.map((reference) => reference.toJson(identifiers)).toList(),
-      if (instances != null)
+      if (instances != null && instances!.isNotEmpty)
         'constantInstances': instances!
             .map((reference) => reference.toJson(identifiers))
             .toList(),
