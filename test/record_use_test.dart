@@ -15,16 +15,13 @@ final recordedUses = RecordUses(
   metadata: Metadata(
     version: Version(1, 6, 2, preRelease: ['wip'], build: '5.-.2.z'),
     timestamp: DateTime.fromMillisecondsSinceEpoch(321432153),
-    hashes: Hashes(
-      noPositions: 'dasdsadfasfwagwraf',
-      noPositionsNoLoadingUnits: 'fdsfdsafdsagh',
-    ),
     comment:
         'Recorded references at compile time and their argument values, as far'
         ' as known, to definitions annotated with @RecordReference',
   ),
-  staticFunctionReferences: [
-    StaticFunctionReference(
+  constantInstances: [],
+  methodCalls: [
+    MethodCall(
       annotations: [
         Annotation(
           identifier: Identifier(
@@ -51,7 +48,7 @@ final recordedUses = RecordUses(
         loadingUnit: 'part_15.js',
       ),
       references: [
-        Reference(
+        CallReference(
           arguments: Arguments(
             constArguments: ConstArguments(
               positional: {'0': 'lib_SHA1', '1': false, '2': 1},
@@ -66,7 +63,7 @@ final recordedUses = RecordUses(
           ),
           loadingUnit: 'o.js',
         ),
-        Reference(
+        CallReference(
           arguments: Arguments(
             constArguments: ConstArguments(
               positional: {'0': 'lib_SHA1', '2': 0},
