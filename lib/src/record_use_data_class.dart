@@ -51,8 +51,7 @@ class RecordUses {
     ];
     return {
       'metadata': metadata.toJson(),
-      'identifiers':
-          identifiers.map((identifier) => identifier.toJson()).toList(),
+      'ids': identifiers.map((identifier) => identifier.toJson()).toList(),
       if (calls != null)
         'methodCalls':
             calls!.map((reference) => reference.toJson(identifiers)).toList(),
@@ -134,12 +133,12 @@ class Annotation {
     List<Identifier> identifiers,
   ) =>
       Annotation(
-        identifier: identifiers[json['identifier'] as int],
+        identifier: identifiers[json['id'] as int],
         fields: json['fields'] as Map<String, dynamic>,
       );
 
   Map<String, dynamic> toJson(List<Identifier> identifiers) => {
-        'identifier': identifiers.indexOf(identifier),
+        'id': identifiers.indexOf(identifier),
         'fields': fields,
       };
 
