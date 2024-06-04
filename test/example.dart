@@ -93,7 +93,6 @@ final jMethodIdid = Identifier(
 final recordedJUses = RecordUses(
   metadata: Metadata(
     version: Version(0, 1, 0),
-    timestamp: DateTime.fromMillisecondsSinceEpoch(1641031200000),
   ),
   instances: [
     Uses(

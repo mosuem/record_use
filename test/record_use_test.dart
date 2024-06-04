@@ -14,7 +14,6 @@ void main() {
 final recordedUses = RecordUses(
   metadata: Metadata(
     version: Version(1, 6, 2, pre: 'wip', build: '5.-.2.z'),
-    timestamp: DateTime.fromMillisecondsSinceEpoch(321432153),
     comment:
         'Recorded references at compile time and their argument values, as far'
         ' as known, to definitions annotated with @RecordReference',
@@ -85,7 +84,6 @@ final recordedUsesJson = {
         'Recorded references at compile time and their argument values, as far'
             ' as known, to definitions annotated with @RecordReference',
     'version': '1.6.2-wip+5.-.2.z',
-    'timestamp': 321432153,
     'hashes': {
       'noPositions': 'dasdsadfasfwagwraf',
       'noPositionsNoLoadingUnits': 'fdsfdsafdsagh'
