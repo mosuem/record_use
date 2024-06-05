@@ -9,9 +9,9 @@ sealed class Reference {
 
   const Reference({this.loadingUnit, required this.location});
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson(List<String> uris) => {
         'loadingUnit': loadingUnit,
-        '@': location.toJson(),
+        '@': location.toJson(uris: uris),
       };
 
   @override
@@ -36,22 +36,23 @@ final class CallReference extends Reference {
     required super.location,
   });
 
-  factory CallReference.fromJson(Map<String, dynamic> json) {
+  factory CallReference.fromJson(Map<String, dynamic> json, List<String> uris) {
     return CallReference(
       arguments: json['arguments'] != null
           ? Arguments.fromJson(json['arguments'] as Map<String, dynamic>)
           : null,
       loadingUnit: json['loadingUnit'] as String?,
-      location: Location.fromJson(json['@'] as Map<String, dynamic>),
+      location:
+          Location.fromJson(json['@'] as Map<String, dynamic>, null, uris),
     );
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(List<String> uris) {
     final argumentJson = arguments?.toJson() ?? {};
     return {
       if (argumentJson.isNotEmpty) 'arguments': argumentJson,
-      ...super.toJson(),
+      ...super.toJson(uris),
     };
   }
 
@@ -75,17 +76,19 @@ final class InstanceReference extends Reference {
     required this.fields,
   });
 
-  factory InstanceReference.fromJson(Map<String, dynamic> json) {
+  factory InstanceReference.fromJson(
+      Map<String, dynamic> json, List<String> uris) {
     return InstanceReference(
       loadingUnit: json['loadingUnit'] as String?,
-      location: Location.fromJson(json['@'] as Map<String, dynamic>),
+      location:
+          Location.fromJson(json['@'] as Map<String, dynamic>, null, uris),
       fields: json['fields'] as Map<String, dynamic>,
     );
   }
 
   @override
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson(List<String> uris) => {
         'fields': fields,
-        ...super.toJson(),
+        ...super.toJson(uris),
       };
 }

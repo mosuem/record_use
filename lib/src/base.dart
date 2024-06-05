@@ -18,15 +18,20 @@ class Definition {
       identifier: identifier,
       location: Location.fromJson(
         json['@'] as Map<String, dynamic>,
-        uri: identifier.uri,
+        identifier.uri,
+        null,
       ),
       loadingUnit: json['loadingUnit'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson(List<Identifier> identifiers) => {
+  Map<String, dynamic> toJson(
+    List<Identifier> identifiers,
+    List<String> uris,
+  ) =>
+      {
         'id': identifiers.indexOf(identifier),
-        '@': location.toJson(withUri: false),
+        '@': location.toJson(),
         'loadingUnit': loadingUnit,
       };
 
@@ -53,17 +58,18 @@ class Location {
     required this.column,
   });
 
-  factory Location.fromJson(Map<String, dynamic> map, {String? uri}) {
+  factory Location.fromJson(
+      Map<String, dynamic> map, String? uri, List<String>? uris) {
     return Location(
-      uri: uri ?? map['uri'] as String,
+      uri: uri ?? uris![map['uri'] as int],
       line: map['line'] as int,
       column: map['column'] as int,
     );
   }
 
-  Map<String, dynamic> toJson({bool withUri = true}) {
+  Map<String, dynamic> toJson({List<String>? uris}) {
     return {
-      if (withUri) 'uri': uri,
+      if (uris != null) 'uri': uris.indexOf(uri),
       'line': line,
       'column': column,
     };
@@ -94,14 +100,15 @@ class Identifier {
     required this.name,
   });
 
-  factory Identifier.fromJson(Map<String, dynamic> json) => Identifier(
-        uri: json['uri'] as String,
+  factory Identifier.fromJson(Map<String, dynamic> json, List<String> uris) =>
+      Identifier(
+        uri: uris[json['uri'] as int],
         parent: json['parent'] as String?,
         name: json['name'] as String,
       );
 
-  Map<String, dynamic> toJson() => {
-        'uri': uri,
+  Map<String, dynamic> toJson(List<String> uris) => {
+        'uri': uris.indexOf(uri),
         if (parent != null) 'parent': parent,
         'name': name,
       };

@@ -20,9 +20,12 @@ class RecordUses {
   });
 
   factory RecordUses.fromJson(Map<String, dynamic> json) {
+    final uris = json['uris'] as List<String>;
     final identifiers = (json['identifiers'] as List)
         .whereType<Map<String, dynamic>>()
-        .map(Identifier.fromJson)
+        .map(
+          (e) => Identifier.fromJson(e, uris),
+        )
         .toList();
     return RecordUses(
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
@@ -30,6 +33,7 @@ class RecordUses {
           .map((x) => Uses.fromJson(
                 x as Map<String, dynamic>,
                 identifiers,
+                uris,
                 CallReference.fromJson,
               ))
           .toList(),
@@ -37,6 +41,7 @@ class RecordUses {
           .map((x) => Uses.fromJson(
                 x as Map<String, dynamic>,
                 identifiers,
+                uris,
                 InstanceReference.fromJson,
               ))
           .toList(),
@@ -44,20 +49,35 @@ class RecordUses {
   }
 
   Map<String, dynamic> toJson() {
-    final identifiers = <Identifier>[
+    final identifiers = <Identifier>{
       if (calls != null) ...calls!.map((call) => call.definition.identifier),
       if (instances != null)
         ...instances!.map((instance) => instance.definition.identifier),
-    ];
+    }.toList();
+    final uris = <String>{
+      ...identifiers.map((e) => e.uri),
+      if (calls != null)
+        ...calls!.expand((call) => [
+              call.definition.location.uri,
+              ...call.references.map((reference) => reference.location.uri),
+            ]),
+      if (instances != null)
+        ...instances!.expand((instance) => [
+              instance.definition.location.uri,
+              ...instance.references.map((reference) => reference.location.uri),
+            ]),
+    }.toList();
     return {
       'metadata': metadata.toJson(),
-      'ids': identifiers.map((identifier) => identifier.toJson()).toList(),
+      'uris': uris,
+      'ids': identifiers.map((identifier) => identifier.toJson(uris)).toList(),
       if (calls != null && calls!.isNotEmpty)
-        'methodCalls':
-            calls!.map((reference) => reference.toJson(identifiers)).toList(),
+        'methodCalls': calls!
+            .map((reference) => reference.toJson(identifiers, uris))
+            .toList(),
       if (instances != null && instances!.isNotEmpty)
         'constantInstances': instances!
-            .map((reference) => reference.toJson(identifiers))
+            .map((reference) => reference.toJson(identifiers, uris))
             .toList(),
     };
   }
@@ -88,7 +108,8 @@ class Uses<T extends Reference> {
   factory Uses.fromJson(
     Map<String, dynamic> json,
     List<Identifier> identifiers,
-    T Function(Map<String, dynamic>) constr,
+    List<String> uris,
+    T Function(Map<String, dynamic>, List<String>) constr,
   ) =>
       Uses(
         definition: Definition.fromJson(
@@ -96,13 +117,17 @@ class Uses<T extends Reference> {
           identifiers,
         ),
         references: (json['references'] as List)
-            .map((x) => constr(x as Map<String, dynamic>))
+            .map((x) => constr(x as Map<String, dynamic>, uris))
             .toList(),
       );
 
-  Map<String, dynamic> toJson(List<Identifier> identifiers) => {
-        'definition': definition.toJson(identifiers),
-        'references': references.map((x) => x.toJson()).toList(),
+  Map<String, dynamic> toJson(
+    List<Identifier> identifiers,
+    List<String> uris,
+  ) =>
+      {
+        'definition': definition.toJson(identifiers, uris),
+        'references': references.map((x) => x.toJson(uris)).toList(),
       };
 
   @override
