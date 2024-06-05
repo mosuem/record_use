@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, prefer_function_declarations_over_variables, lines_longer_than_80_chars, unused_field
 
 import 'package:pub_semver/pub_semver.dart';
+import 'package:record_use/record_use.dart';
 import 'package:record_use/record_use_internal.dart';
-import 'package:record_use/src/record_use.dart';
 
 void main() {
   final usage = UsageRecord(recordedJUses).fieldsForConstructionOf(jMethodIdid);

@@ -1,5 +1,5 @@
 import 'arguments.dart';
-import 'base.dart';
+import 'location.dart';
 
 sealed class Reference {
   final String? loadingUnit;

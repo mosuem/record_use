@@ -5,10 +5,11 @@
 import 'package:collection/collection.dart';
 
 import 'arguments.dart';
-import 'base.dart';
+import 'identifier.dart';
 import 'metadata.dart';
-import 'record_use_data_class.dart';
+import 'record_uses.dart';
 import 'reference.dart';
+import 'uses.dart';
 
 extension type UsageRecord(RecordUses _recordUses) {
   UsageRecord._(this._recordUses);
