@@ -72,7 +72,7 @@ final class CallReference extends Reference {
 }
 
 final class InstanceReference extends Reference {
-  final Map<String, dynamic>? fields;
+  final Map<String, dynamic> fields;
 
   InstanceReference({
     super.loadingUnit,
@@ -86,13 +86,13 @@ final class InstanceReference extends Reference {
       loadingUnit: json['loadingUnit'] as String?,
       location:
           Location.fromJson(json['@'] as Map<String, dynamic>, null, uris),
-      fields: json['fields'] as Map<String, dynamic>?,
+      fields: json['fields'] as Map<String, dynamic>? ?? {},
     );
   }
 
   @override
   Map<String, dynamic> toJson(List<String> uris) => {
-        if (fields != null) 'fields': fields,
+        if (fields.isNotEmpty) 'fields': fields,
         ...super.toJson(uris),
       };
 }

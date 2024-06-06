@@ -42,8 +42,7 @@ extension type UsageRecord(RecordUses _recordUses) {
           ?.firstWhereOrNull(
               (instance) => instance.definition.identifier == definition)
           ?.references
-          .map((reference) => reference.fields)
-          .whereType();
+          .map((reference) => reference.fields);
 
   /// Checks if any call to [definition] has non-const arguments.
   ///
