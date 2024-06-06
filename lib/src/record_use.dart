@@ -28,7 +28,7 @@ extension type UsageRecord(RecordUses _recordUses) {
       _callTo(definition)
           ?.references
           .map((reference) => reference.arguments)
-          .whereType<Arguments>();
+          .whereType();
 
   /// Finds all fields of a const construction of the class at [definition].
   ///
@@ -42,7 +42,8 @@ extension type UsageRecord(RecordUses _recordUses) {
           ?.firstWhereOrNull(
               (instance) => instance.definition.identifier == definition)
           ?.references
-          .map((reference) => reference.fields);
+          .map((reference) => reference.fields)
+          .whereType();
 
   /// Checks if any call to [definition] has non-const arguments.
   ///
