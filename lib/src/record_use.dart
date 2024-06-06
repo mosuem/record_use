@@ -92,6 +92,9 @@ extension type RecordUse._(UsageRecord _recordUses) {
   ///         "s": "freddie"
   ///       };
   /// ```
+  ///
+  /// What kinds of fields can be recorded depends on the implementation of
+  /// https://dart-review.googlesource.com/c/sdk/+/369620/13/pkg/vm/lib/transformations/record_use/record_instance.dart
   Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
     Identifier definition,
   ) =>
