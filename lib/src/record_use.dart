@@ -103,9 +103,10 @@ extension type RecordUse._(UsageRecord _recordUses) {
 
   /// Checks if any call to [definition] has non-const arguments.
   ///
-  /// The definition must be annotated with `@RecordMethodUse`. If there are no
-  /// calls to the definition, either because it was treeshaken, because it
-  /// was not annotated, or because it does not exist, returns `false`.
+  /// The definition must be annotated with `@RecordUse(arguments: true)`. If
+  /// there are no calls to the definition, either because it was treeshaken,
+  /// because it was not annotated, or because it does not exist, returns
+  /// `false`.
   bool hasNonConstArguments(Identifier definition) =>
       _callTo(definition)?.references.any(
         (reference) {

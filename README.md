@@ -1,39 +1,70 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# `record_use`
+This package provides the data classes for the usage recording feature.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+Dart objects with the `@RecordUse` annotation are being recorded at compile 
+time, providing the user with information. The information depends on the object
+being recorded.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+- If placed on a static method, the annotation means that calls to the method
+are being recorded. If the `arguments` parameter is set to `true`, then
+arguments will also be recorded, as far as they can be inferred at compile time.
+- If placed on a class with a constant constructor, the annotation means that
+any constant instance of the class will be recorded. This is particularly useful
+when placing 
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
+Example
 ```dart
-const like = 'sample';
+import 'package:meta/meta.dart' show RecordUse;
+
+void main() {
+  print(SomeClass.stringMetadata(42));
+  print(SomeClass.doubleMetadata(42));
+  print(SomeClass.intMetadata(42));
+  print(SomeClass.boolMetadata(42));
+}
+
+class SomeClass {
+  @RecordMetadata('leroyjenkins')
+  @RecordUse(arguments: true)
+  static stringMetadata(int i) {
+    return i + 1;
+  }
+
+  @RecordMetadata(3.14)
+  @RecordUse(arguments: true)
+  static doubleMetadata(int i) {
+    return i + 1;
+  }
+
+  @RecordMetadata(42)
+  @RecordUse(arguments: true)
+  static intMetadata(int i) {
+    return i + 1;
+  }
+
+  @RecordMetadata(true)
+  @RecordUse(arguments: true)
+  static boolMetadata(int i) {
+    return i + 1;
+  }
+}
+
+@RecordUse()
+class RecordMetadata {
+  final Object metadata;
+
+  const RecordMetadata(this.metadata);
+}
+
+```
+This code will generate a JSON file that contains the following information:
+
+## Installation
+To install the record_use package, run the following command:
+
+```bash
+dart pub add record_use
 ```
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
