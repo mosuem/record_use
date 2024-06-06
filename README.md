@@ -1,5 +1,6 @@
-# `record_use`
-This package provides the data classes for the usage recording feature.
+# `package:record_use`
+This package provides the data classes for the usage recording feature in the
+Dart SDK.
 
 Dart objects with the `@RecordUse` annotation are being recorded at compile 
 time, providing the user with information. The information depends on the object
@@ -12,7 +13,7 @@ arguments will also be recorded, as far as they can be inferred at compile time.
 any constant instance of the class will be recorded. This is particularly useful
 when placing 
 
-Example
+## Example
 ```dart
 import 'package:meta/meta.dart' show RecordUse;
 
