@@ -11,9 +11,7 @@ import 'record_uses.dart';
 import 'reference.dart';
 import 'uses.dart';
 
-extension type UsageRecord(RecordUses _recordUses) {
-  UsageRecord._(this._recordUses);
-
+extension type UsageRecord._(RecordUses _recordUses) {
   /// Show the metadata for this recording of usages.
   Metadata get metadata => _recordUses.metadata;
 
