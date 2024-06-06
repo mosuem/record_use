@@ -7,11 +7,11 @@ import 'package:record_use/record_use_internal.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('First Test', () {
-    expect(recordedUses.toJson(), recordedUsesJson);
+  test('Json->Object->Json', () {
+    expect(RecordUses.fromJson(recordedUsesJson).toJson(), recordedUsesJson);
   });
-  test('First Test', () {
-    expect(RecordUses.fromJson(recordedUsesJson), recordedUses);
+  test('Object->Json->Object', () {
+    expect(RecordUses.fromJson(recordedUses.toJson()), recordedUses);
   });
 }
 
@@ -87,36 +87,20 @@ final recordedUsesJson = {
     'comment':
         'Recorded references at compile time and their argument values, as far'
             ' as known, to definitions annotated with @RecordReference',
-    'version': '1.6.2-wip+5.-.2.z',
-    'hashes': {
-      'noPositions': 'dasdsadfasfwagwraf',
-      'noPositionsNoLoadingUnits': 'fdsfdsafdsagh'
-    }
+    'version': '1.6.2-wip+5.-.2.z'
   },
-  'staticFunctionReferences': [
+  'uris': [
+    'file://lib/_internal/js_runtime/lib/js_helper.dart',
+    'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart'
+  ],
+  'ids': [
+    {'uri': 0, 'parent': 'MyClass', 'name': 'get:loadDeferredLibrary'}
+  ],
+  'calls': [
     {
-      'annotations': [
-        {
-          'id': {
-            'uri': 'file://lib/_internal/js_runtime/lib/js_helper.dart',
-            'name': 'RecordReference'
-          },
-          'fields': {
-            '_metadata': {'key': true}
-          }
-        }
-      ],
       'definition': {
-        'id': {
-          'uri': 'file://lib/_internal/js_runtime/lib/js_helper.dart',
-          'parent': 'MyClass',
-          'name': 'get:loadDeferredLibrary'
-        },
-        '@': {
-          'uri': 'file://lib/_internal/js_runtime/lib/js_helper.dart',
-          'line': 12,
-          'column': 67
-        },
+        'id': 0,
+        '@': {'line': 12, 'column': 67},
         'loadingUnit': 'part_15.js'
       },
       'references': [
@@ -125,15 +109,10 @@ final recordedUsesJson = {
             'const': {
               'positional': {'0': 'lib_SHA1', '1': false, '2': 1},
               'named': {'leroy': 'jenkins', 'freddy': 'mercury'}
-            },
+            }
           },
           'loadingUnit': 'o.js',
-          '@': {
-            'uri':
-                'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart',
-            'line': 14,
-            'column': 49
-          }
+          '@': {'uri': 1, 'line': 14, 'column': 49}
         },
         {
           'arguments': {
@@ -147,12 +126,7 @@ final recordedUsesJson = {
             }
           },
           'loadingUnit': 'o.js',
-          '@': {
-            'uri':
-                'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart',
-            'line': 14,
-            'column': 48
-          }
+          '@': {'uri': 1, 'line': 14, 'column': 48}
         }
       ]
     }

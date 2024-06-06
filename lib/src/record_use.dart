@@ -39,7 +39,7 @@ extension type UsageRecord(RecordUses _recordUses) {
     Identifier definition,
   ) =>
       _recordUses.instances
-          ?.firstWhereOrNull(
+          .firstWhereOrNull(
               (instance) => instance.definition.identifier == definition)
           ?.references
           .map((reference) => reference.fields);
@@ -62,5 +62,5 @@ extension type UsageRecord(RecordUses _recordUses) {
       false;
 
   Uses<CallReference>? _callTo(Identifier definition) => _recordUses.calls
-      ?.firstWhereOrNull((call) => call.definition.identifier == definition);
+      .firstWhereOrNull((call) => call.definition.identifier == definition);
 }

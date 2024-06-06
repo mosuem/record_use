@@ -98,6 +98,7 @@ final recordedJUses = RecordUses(
   metadata: Metadata(
     version: Version(0, 1, 0),
   ),
+  calls: [],
   instances: [
     Uses(
       definition: Definition(

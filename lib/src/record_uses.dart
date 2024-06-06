@@ -11,18 +11,18 @@ import 'uses.dart';
 
 class RecordUses {
   final Metadata metadata;
-  final List<Uses<CallReference>>? calls;
-  final List<Uses<InstanceReference>>? instances;
+  final List<Uses<CallReference>> calls;
+  final List<Uses<InstanceReference>> instances;
 
   RecordUses({
     required this.metadata,
-    this.calls,
-    this.instances,
+    required this.calls,
+    required this.instances,
   });
 
   factory RecordUses.fromJson(Map<String, dynamic> json) {
     final uris = json['uris'] as List<String>;
-    final identifiers = (json['identifiers'] as List)
+    final identifiers = (json['ids'] as List)
         .whereType<Map<String, dynamic>>()
         .map(
           (e) => Identifier.fromJson(e, uris),
@@ -30,54 +30,53 @@ class RecordUses {
         .toList();
     return RecordUses(
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
-      calls: (json['methodCalls'] as List)
-          .map((x) => Uses.fromJson(
-                x as Map<String, dynamic>,
-                identifiers,
-                uris,
-                CallReference.fromJson,
-              ))
-          .toList(),
-      instances: (json['constantInstances'] as List)
-          .map((x) => Uses.fromJson(
-                x as Map<String, dynamic>,
-                identifiers,
-                uris,
-                InstanceReference.fromJson,
-              ))
-          .toList(),
+      calls: (json['calls'] as List?)
+              ?.map((x) => Uses.fromJson(
+                    x as Map<String, dynamic>,
+                    identifiers,
+                    uris,
+                    CallReference.fromJson,
+                  ))
+              .toList() ??
+          [],
+      instances: (json['instances'] as List?)
+              ?.map((x) => Uses.fromJson(
+                    x as Map<String, dynamic>,
+                    identifiers,
+                    uris,
+                    InstanceReference.fromJson,
+                  ))
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
     final identifiers = <Identifier>{
-      if (calls != null) ...calls!.map((call) => call.definition.identifier),
-      if (instances != null)
-        ...instances!.map((instance) => instance.definition.identifier),
+      ...calls.map((call) => call.definition.identifier),
+      ...instances.map((instance) => instance.definition.identifier),
     }.toList();
     final uris = <String>{
       ...identifiers.map((e) => e.uri),
-      if (calls != null)
-        ...calls!.expand((call) => [
-              call.definition.location.uri,
-              ...call.references.map((reference) => reference.location.uri),
-            ]),
-      if (instances != null)
-        ...instances!.expand((instance) => [
-              instance.definition.location.uri,
-              ...instance.references.map((reference) => reference.location.uri),
-            ]),
+      ...calls.expand((call) => [
+            call.definition.location.uri,
+            ...call.references.map((reference) => reference.location.uri),
+          ]),
+      ...instances.expand((instance) => [
+            instance.definition.location.uri,
+            ...instance.references.map((reference) => reference.location.uri),
+          ]),
     }.toList();
     return {
       'metadata': metadata.toJson(),
       'uris': uris,
       'ids': identifiers.map((identifier) => identifier.toJson(uris)).toList(),
-      if (calls != null && calls!.isNotEmpty)
-        'methodCalls': calls!
+      if (calls.isNotEmpty)
+        'calls': calls
             .map((reference) => reference.toJson(identifiers, uris))
             .toList(),
-      if (instances != null && instances!.isNotEmpty)
-        'constantInstances': instances!
+      if (instances.isNotEmpty)
+        'instances': instances
             .map((reference) => reference.toJson(identifiers, uris))
             .toList(),
     };
