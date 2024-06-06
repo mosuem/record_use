@@ -51,24 +51,26 @@ class Arguments {
 }
 
 class ConstArguments {
-  Map<String, dynamic> positional;
+  Map<int, dynamic> positional;
   Map<String, dynamic> named;
 
-  ConstArguments(
-      {Map<String, dynamic>? positional, Map<String, dynamic>? named})
+  ConstArguments({Map<int, dynamic>? positional, Map<String, dynamic>? named})
       : named = named ?? {},
         positional = positional ?? {};
 
   factory ConstArguments.fromJson(Map<String, dynamic> json) => ConstArguments(
         positional: json['positional'] != null
-            ? json['positional'] as Map<String, dynamic>
+            ? (json['positional'] as Map<String, dynamic>)
+                .map((key, value) => MapEntry(int.parse(key), value))
             : {},
         named:
             json['named'] != null ? json['named'] as Map<String, dynamic> : {},
       );
 
   Map<String, dynamic> toJson() => {
-        if (positional.isNotEmpty) 'positional': positional,
+        if (positional.isNotEmpty)
+          'positional':
+              positional.map((key, value) => MapEntry(key.toString(), value)),
         if (named.isNotEmpty) 'named': named,
       };
 

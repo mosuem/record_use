@@ -17,11 +17,39 @@ extension type RecordUse._(UsageRecord _recordUses) {
 
   /// Finds all arguments for calls to the [definition].
   ///
-  /// The definition must be annotated with `@RecordMethodUse`. If there are no
-  /// calls to the definition, either because it was treeshaken, because it
-  /// was not annotated, or because it does not exist, returns `null`.
+  /// The definition must be annotated with `@RecordUse(arguments: true)`. If
+  /// there are no calls to the definition, either because it was treeshaken,
+  /// because it was not annotated, or because it does not exist, returns
+  /// `null`.
   ///
-  /// Returns an empty list if the arguments were not collected.
+  /// Returns an empty iterable if the arguments were not collected.
+  ///
+  /// Example:
+  /// ```dart
+  /// import 'package:meta/meta.dart' show ResourceIdentifier;
+  /// void main() {
+  ///   print(SomeClass.someStaticMethod(42));
+  /// }
+  ///
+  /// class SomeClass {
+  ///   @ResourceIdentifier('id')
+  ///   static someStaticMethod(int i) {
+  ///     return i + 1;
+  ///   }
+  /// }
+  /// ```
+  ///
+  /// Would mean that
+  /// ```
+  /// argumentsForCallsTo(Identifier(
+  ///           uri: 'path/to/file.dart',
+  ///           parent: 'SomeClass',
+  ///           name: 'someStaticMethod'),
+  ///       ).first ==
+  ///       Arguments(
+  ///         constArguments: ConstArguments(positional: {1: 42}),
+  ///       );
+  /// ```
   Iterable<Arguments>? argumentsForCallsTo(Identifier definition) =>
       _callTo(definition)
           ?.references
@@ -30,9 +58,40 @@ extension type RecordUse._(UsageRecord _recordUses) {
 
   /// Finds all fields of a const construction of the class at [definition].
   ///
-  /// The definition must be annotated with `@RecordAnnotationUse`. If there are
+  /// The definition must be annotated with `@RecordUse()`. If there are
   /// no instances of the definition, either because it was treeshaken, because
   /// it was not annotated, or because it does not exist, returns `null`.
+  ///
+  /// Example:
+  /// ```dart
+  /// void main() {
+  ///   print(SomeClass.someStaticMethod(42));
+  /// }
+  ///
+  /// class SomeClass {
+  ///   @AnnotationClass('freddie')
+  ///   static someStaticMethod(int i) {
+  ///     return i + 1;
+  ///   }
+  /// }
+  ///
+  /// @ResourceIdentifier()
+  /// class AnnotationClass {
+  ///   final String s;
+  ///   const AnnotationClass(this.s);
+  /// }
+  /// ```
+  ///
+  /// Would mean that
+  /// ```
+  /// fieldsForConstructionOf(Identifier(
+  ///           uri: 'path/to/file.dart',
+  ///           name: 'AnnotationClass'),
+  ///       ).first ==
+  ///       {
+  ///         "s": "freddie"
+  ///       };
+  /// ```
   Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
     Identifier definition,
   ) =>

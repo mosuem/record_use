@@ -44,7 +44,7 @@ final recordedUses = UsageRecord(
         CallReference(
           arguments: Arguments(
             constArguments: ConstArguments(
-              positional: {'0': 'lib_SHA1', '1': false, '2': 1},
+              positional: {0: 'lib_SHA1', 1: false, 2: 1},
               named: {'leroy': 'jenkins', 'freddy': 'mercury'},
             ),
           ),
@@ -60,7 +60,7 @@ final recordedUses = UsageRecord(
         CallReference(
           arguments: Arguments(
             constArguments: ConstArguments(
-              positional: {'0': 'lib_SHA1', '2': 0},
+              positional: {0: 'lib_SHA1', 2: 0},
               named: {'leroy': 'jenkins'},
             ),
             nonConstArguments: NonConstArguments(
