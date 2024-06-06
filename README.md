@@ -57,7 +57,32 @@ class RecordMetadata {
 }
 
 ```
-This code will generate a JSON file that contains the following information:
+This code will generate a JSON file that contains both the `metadata` values of
+the `RecordMetadata` instances, as well as the arguments for the different
+methods annotated with `@RecordUse(arguments: true)`.
+
+This information can then be accessed in a link hook as follows:
+```dart
+import 'package:native_assets_cli/native_assets_cli.dart';
+
+void main(List<String> arguments){
+  link(arguments, (config, output) async {
+    final uses = config.recordedUses;
+    
+    final args = uses.argumentsForCallsTo(boolMetadataId));
+    //[args] is an iterable containing "42"
+
+    final fields = uses.fieldsForConstructionOf(recordMetadataId);
+    //[fields] is an iterable of maps, in this case containing
+    // {"arguments": "leroyjenkins"}
+    // {"arguments": 3.14}
+    // {"arguments": 42}
+    // {"arguments": true}
+
+    ... // Do something with the information, such as tree-shaking native assets
+  });
+}
+```
 
 ## Installation
 To install the record_use package, run the following command:
