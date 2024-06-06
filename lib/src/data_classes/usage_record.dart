@@ -7,20 +7,20 @@ import 'package:collection/collection.dart';
 import 'identifier.dart';
 import 'metadata.dart';
 import 'reference.dart';
-import 'uses.dart';
+import 'usage.dart';
 
-class RecordUses {
+class UsageRecord {
   final Metadata metadata;
-  final List<Uses<CallReference>> calls;
-  final List<Uses<InstanceReference>> instances;
+  final List<Usage<CallReference>> calls;
+  final List<Usage<InstanceReference>> instances;
 
-  RecordUses({
+  UsageRecord({
     required this.metadata,
     required this.calls,
     required this.instances,
   });
 
-  factory RecordUses.fromJson(Map<String, dynamic> json) {
+  factory UsageRecord.fromJson(Map<String, dynamic> json) {
     final uris = json['uris'] as List<String>;
     final identifiers = (json['ids'] as List)
         .whereType<Map<String, dynamic>>()
@@ -28,10 +28,10 @@ class RecordUses {
           (e) => Identifier.fromJson(e, uris),
         )
         .toList();
-    return RecordUses(
+    return UsageRecord(
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
       calls: (json['calls'] as List?)
-              ?.map((x) => Uses.fromJson(
+              ?.map((x) => Usage.fromJson(
                     x as Map<String, dynamic>,
                     identifiers,
                     uris,
@@ -40,7 +40,7 @@ class RecordUses {
               .toList() ??
           [],
       instances: (json['instances'] as List?)
-              ?.map((x) => Uses.fromJson(
+              ?.map((x) => Usage.fromJson(
                     x as Map<String, dynamic>,
                     identifiers,
                     uris,
@@ -87,7 +87,7 @@ class RecordUses {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
 
-    return other is RecordUses &&
+    return other is UsageRecord &&
         other.metadata == metadata &&
         listEquals(other.calls, calls);
   }

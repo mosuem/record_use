@@ -3,19 +3,18 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:pub_semver/pub_semver.dart';
-import 'package:record_use/record_use_internal.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('Json->Object->Json', () {
-    expect(RecordUses.fromJson(recordedUsesJson).toJson(), recordedUsesJson);
+    expect(UsageRecord.fromJson(recordedUsesJson).toJson(), recordedUsesJson);
   });
   test('Object->Json->Object', () {
-    expect(RecordUses.fromJson(recordedUses.toJson()), recordedUses);
+    expect(UsageRecord.fromJson(recordedUses.toJson()), recordedUses);
   });
 }
 
-final recordedUses = RecordUses(
+final recordedUses = UsageRecord(
   metadata: Metadata(
     version: Version(1, 6, 2, pre: 'wip', build: '5.-.2.z'),
     comment:
@@ -24,7 +23,7 @@ final recordedUses = RecordUses(
   ),
   instances: [],
   calls: [
-    Uses(
+    Usage(
       definition: Definition(
         identifier: Identifier(
           uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')

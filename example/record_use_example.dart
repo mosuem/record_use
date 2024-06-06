@@ -4,6 +4,6 @@
 
 import 'package:record_use/record_use.dart';
 
-void doStuff(UsageRecord usage) {
+void doStuff(RecordUse usage) {
   print(usage.metadata.toString());
 }

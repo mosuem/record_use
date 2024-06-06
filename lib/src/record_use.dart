@@ -4,14 +4,14 @@
 
 import 'package:collection/collection.dart';
 
-import 'arguments.dart';
-import 'identifier.dart';
-import 'metadata.dart';
-import 'record_uses.dart';
-import 'reference.dart';
-import 'uses.dart';
+import 'data_classes/arguments.dart';
+import 'data_classes/identifier.dart';
+import 'data_classes/metadata.dart';
+import 'data_classes/reference.dart';
+import 'data_classes/usage.dart';
+import 'data_classes/usage_record.dart';
 
-extension type UsageRecord._(RecordUses _recordUses) {
+extension type RecordUse._(UsageRecord _recordUses) {
   /// Show the metadata for this recording of usages.
   Metadata get metadata => _recordUses.metadata;
 
@@ -59,6 +59,6 @@ extension type UsageRecord._(RecordUses _recordUses) {
       ) ??
       false;
 
-  Uses<CallReference>? _callTo(Identifier definition) => _recordUses.calls
+  Usage<CallReference>? _callTo(Identifier definition) => _recordUses.calls
       .firstWhereOrNull((call) => call.definition.identifier == definition);
 }

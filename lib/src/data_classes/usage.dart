@@ -8,22 +8,22 @@ import 'definition.dart';
 import 'identifier.dart';
 import 'reference.dart';
 
-class Uses<T extends Reference> {
+class Usage<T extends Reference> {
   final Definition definition;
   final List<T> references;
 
-  Uses({
+  Usage({
     required this.definition,
     required this.references,
   });
 
-  factory Uses.fromJson(
+  factory Usage.fromJson(
     Map<String, dynamic> json,
     List<Identifier> identifiers,
     List<String> uris,
     T Function(Map<String, dynamic>, List<String>) constr,
   ) =>
-      Uses(
+      Usage(
         definition: Definition.fromJson(
           json['definition'] as Map<String, dynamic>,
           identifiers,
@@ -47,7 +47,7 @@ class Uses<T extends Reference> {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
 
-    return other is Uses &&
+    return other is Usage &&
         other.definition == definition &&
         listEquals(other.references, references);
   }
