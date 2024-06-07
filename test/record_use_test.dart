@@ -22,7 +22,41 @@ final recordedUses = UsageRecord(
         'Recorded references at compile time and their argument values, as far'
         ' as known, to definitions annotated with @RecordReference',
   ),
-  instances: [],
+  instances: [
+    Usage(
+      definition: Definition(
+        identifier: Identifier(
+          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+              .toString(),
+          name: 'MyAnnotation',
+        ),
+        location: Location(
+          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+              .toString(),
+          line: 15,
+          column: 30,
+        ),
+      ),
+      references: [
+        InstanceReference(
+          location: Location(
+            uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+                .toString(),
+            line: 40,
+            column: 30,
+          ),
+          fields: [
+            Field(
+              className: 'className',
+              name: 'a',
+              value: 42,
+            ),
+          ],
+          loadingUnit: '3',
+        ),
+      ],
+    ),
+  ],
   calls: [
     Usage(
       definition: Definition(
@@ -64,7 +98,7 @@ final recordedUses = UsageRecord(
               named: {'leroy': 'jenkins'},
             ),
             nonConstArguments: NonConstArguments(
-              positional: ['1'],
+              positional: [1],
               named: ['freddy'],
             ),
           ),
@@ -94,7 +128,8 @@ final recordedUsesJson = {
     'file://benchmarks/OmnibusDeferred/dart/OmnibusDeferred.dart'
   ],
   'ids': [
-    {'uri': 0, 'parent': 'MyClass', 'name': 'get:loadDeferredLibrary'}
+    {'uri': 0, 'parent': 'MyClass', 'name': 'get:loadDeferredLibrary'},
+    {'uri': 0, 'name': 'MyAnnotation'}
   ],
   'calls': [
     {
@@ -121,12 +156,34 @@ final recordedUsesJson = {
               'named': {'leroy': 'jenkins'}
             },
             'nonConst': {
-              'positional': ['1'],
+              'positional': [1],
               'named': ['freddy']
             }
           },
           'loadingUnit': 'o.js',
           '@': {'uri': 1, 'line': 14, 'column': 48}
+        }
+      ]
+    }
+  ],
+  'instances': [
+    {
+      'definition': {
+        'id': 1,
+        '@': {'line': 15, 'column': 30},
+        'loadingUnit': null
+      },
+      'references': [
+        {
+          'fields': [
+            {
+              'className': 'className',
+              'name': 'a',
+              'value': 42,
+            }
+          ],
+          'loadingUnit': '3',
+          '@': {'uri': 0, 'line': 40, 'column': 30}
         }
       ]
     }

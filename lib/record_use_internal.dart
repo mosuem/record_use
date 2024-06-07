@@ -5,6 +5,7 @@
 export 'src/data_classes/annotation.dart';
 export 'src/data_classes/arguments.dart';
 export 'src/data_classes/definition.dart';
+export 'src/data_classes/field.dart';
 export 'src/data_classes/identifier.dart';
 export 'src/data_classes/location.dart';
 export 'src/data_classes/metadata.dart';

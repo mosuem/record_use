@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'arguments.dart';
+import 'field.dart';
 import 'location.dart';
 
 sealed class Reference {
@@ -72,7 +73,7 @@ final class CallReference extends Reference {
 }
 
 final class InstanceReference extends Reference {
-  final Map<String, dynamic> fields;
+  final List<Field> fields;
 
   InstanceReference({
     super.loadingUnit,
@@ -86,13 +87,16 @@ final class InstanceReference extends Reference {
       loadingUnit: json['loadingUnit'] as String?,
       location:
           Location.fromJson(json['@'] as Map<String, dynamic>, null, uris),
-      fields: json['fields'] as Map<String, dynamic>? ?? {},
+      fields: (json['fields'] as List)
+          .map((fieldStr) => Field.fromJson(fieldStr as Map<String, dynamic>))
+          .toList(),
     );
   }
 
   @override
   Map<String, dynamic> toJson(List<String> uris) => {
-        if (fields.isNotEmpty) 'fields': fields,
+        if (fields.isNotEmpty)
+          'fields': fields.map((field) => field.toJson()).toList(),
         ...super.toJson(uris),
       };
 }

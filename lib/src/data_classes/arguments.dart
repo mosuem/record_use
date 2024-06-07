@@ -89,18 +89,17 @@ class ConstArguments {
 }
 
 class NonConstArguments {
-  List<dynamic> positional;
+  List<int> positional;
   List<String> named; // Assuming named arguments are strings (keys)
 
-  NonConstArguments({List? positional, List<String>? named})
+  NonConstArguments({List<int>? positional, List<String>? named})
       : named = named ?? [],
         positional = positional ?? [];
 
   factory NonConstArguments.fromJson(Map<String, dynamic> json) =>
       NonConstArguments(
-        positional: json['positional'] != null
-            ? json['positional'] as List<dynamic>
-            : [],
+        positional:
+            json['positional'] != null ? json['positional'] as List<int> : [],
         named: json['named'] != null ? json['named'] as List<String> : [],
       );
 

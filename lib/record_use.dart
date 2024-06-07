@@ -4,6 +4,7 @@
 
 export 'src/data_classes/arguments.dart'
     show Arguments, ConstArguments, NonConstArguments;
+export 'src/data_classes/field.dart' show Field;
 export 'src/data_classes/identifier.dart' show Identifier;
 export 'src/data_classes/location.dart' show Location;
 export 'src/data_classes/metadata.dart' show Metadata;

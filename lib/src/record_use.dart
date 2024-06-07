@@ -5,6 +5,7 @@
 import 'package:collection/collection.dart';
 
 import 'data_classes/arguments.dart';
+import 'data_classes/field.dart';
 import 'data_classes/identifier.dart';
 import 'data_classes/metadata.dart';
 import 'data_classes/reference.dart';
@@ -95,14 +96,14 @@ extension type RecordUse._(UsageRecord _recordUses) {
   ///
   /// What kinds of fields can be recorded depends on the implementation of
   /// https://dart-review.googlesource.com/c/sdk/+/369620/13/pkg/vm/lib/transformations/record_use/record_instance.dart
-  Iterable<Map<String, dynamic>>? fieldsForConstructionOf(
+  Iterable<Field>? fieldsForConstructionOf(
     Identifier definition,
   ) =>
       _recordUses.instances
           .firstWhereOrNull(
               (instance) => instance.definition.identifier == definition)
           ?.references
-          .map((reference) => reference.fields);
+          .expand((reference) => reference.fields);
 
   /// Checks if any call to [definition] has non-const arguments.
   ///
