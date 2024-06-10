@@ -19,7 +19,7 @@ extension type RecordUse._(UsageRecord _recordUses) {
   /// Show the metadata for this recording of usages.
   Metadata get metadata => _recordUses.metadata;
 
-  /// Finds all references to the [definition].
+  /// Finds all arguments for calls to the [definition].
   ///
   /// The definition must be annotated with `@RecordUse()`. If there are no
   /// calls to the definition, either because it was treeshaken, because it was
@@ -59,11 +59,14 @@ extension type RecordUse._(UsageRecord _recordUses) {
           .map((reference) => reference.arguments)
           .whereType();
 
-  /// Finds all fields of a const construction of the class at [definition].
+  /// Finds all fields of a const instance of the class at [definition].
   ///
   /// The definition must be annotated with `@RecordUse()`. If there are
   /// no instances of the definition, either because it was treeshaken, because
   /// it was not annotated, or because it does not exist, returns `null`.
+  ///
+  /// The types of fields supported are defined at
+  /// TODO: insert reference to the supported field types for serialization
   ///
   /// Example:
   /// ```dart
