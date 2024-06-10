@@ -26,25 +26,25 @@ void main() {
 
 class SomeClass {
   @RecordMetadata('leroyjenkins')
-  @RecordUse(arguments: true)
+  @RecordUse()
   static stringMetadata(int i) {
     return i + 1;
   }
 
   @RecordMetadata(3.14)
-  @RecordUse(arguments: true)
+  @RecordUse()
   static doubleMetadata(int i) {
     return i + 1;
   }
 
   @RecordMetadata(42)
-  @RecordUse(arguments: true)
+  @RecordUse()
   static intMetadata(int i) {
     return i + 1;
   }
 
   @RecordMetadata(true)
-  @RecordUse(arguments: true)
+  @RecordUse()
   static boolMetadata(int i) {
     return i + 1;
   }
@@ -60,7 +60,7 @@ class RecordMetadata {
 ```
 This code will generate a JSON file that contains both the `metadata` values of
 the `RecordMetadata` instances, as well as the arguments for the different
-methods annotated with `@RecordUse(arguments: true)`.
+methods annotated with `@RecordUse()`.
 
 This information can then be accessed in a link hook as follows:
 ```dart
@@ -70,11 +70,11 @@ void main(List<String> arguments){
   link(arguments, (config, output) async {
     final uses = config.recordedUses;
     
-    final args = uses.argumentsForCallsTo(boolMetadataId));
-    //[args] is an iterable containing "42"
+    final args = uses.callReferencesTo(boolMetadataId));
+    //[args] is an iterable of [Argument] classes, in this case containing "42"
 
-    final fields = uses.fieldsForConstructionOf(recordMetadataId);
-    //[fields] is an iterable of maps, in this case containing
+    final fields = uses.instanceReferencesTo(recordMetadataId);
+    //[fields] is an iterable of [Field] classes, in this case containing
     // {"arguments": "leroyjenkins"}
     // {"arguments": 3.14}
     // {"arguments": 42}
