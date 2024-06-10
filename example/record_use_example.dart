@@ -4,6 +4,9 @@
 
 import 'package:record_use/record_use.dart';
 
-void doStuff(RecordUse usage) {
-  print(usage.metadata.toString());
+void doStuff(RecordUse usage, Identifier callId, Identifier referenceId) {
+  print(usage.metadata);
+  print(usage.callReferencesTo(callId));
+  print(usage.instanceReferencesTo(referenceId));
+  print(usage.hasNonConstArguments(callId));
 }
