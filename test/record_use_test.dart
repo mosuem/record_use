@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:pub_semver/pub_semver.dart';
+import 'package:record_use/record_use.dart';
 import 'package:record_use/record_use_internal.dart';
 import 'package:test/test.dart';
 
@@ -13,7 +14,32 @@ void main() {
   test('Object->Json->Object', () {
     expect(UsageRecord.fromJson(recordedUses.toJson()), recordedUses);
   });
+
+  test('API calls', () {
+    expect(
+      RecordUse.fromJson(recordedUsesJson).callReferencesTo(callId),
+      recordedUses.calls.expand((e) => e.references).map((e) => e.arguments),
+    );
+  });
+  test('API instances', () {
+    expect(
+      RecordUse.fromJson(recordedUsesJson).instanceReferencesTo(instanceId),
+      recordedUses.instances.expand((e) => e.references).map((e) => e.fields),
+    );
+  });
 }
+
+final callId = Identifier(
+  uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+      .toString(),
+  parent: 'MyClass',
+  name: 'get:loadDeferredLibrary',
+);
+final instanceId = Identifier(
+  uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
+      .toString(),
+  name: 'MyAnnotation',
+);
 
 final recordedUses = UsageRecord(
   metadata: Metadata(
@@ -25,11 +51,7 @@ final recordedUses = UsageRecord(
   instances: [
     Usage(
       definition: Definition(
-        identifier: Identifier(
-          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
-              .toString(),
-          name: 'MyAnnotation',
-        ),
+        identifier: instanceId,
         location: Location(
           uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
               .toString(),
@@ -60,12 +82,7 @@ final recordedUses = UsageRecord(
   calls: [
     Usage(
       definition: Definition(
-        identifier: Identifier(
-          uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
-              .toString(),
-          parent: 'MyClass',
-          name: 'get:loadDeferredLibrary',
-        ),
+        identifier: callId,
         location: Location(
           uri: Uri.parse('file://lib/_internal/js_runtime/lib/js_helper.dart')
               .toString(),
