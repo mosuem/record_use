@@ -1,4 +1,10 @@
 # `package:record_use`
+
+
+> [!CAUTION]
+> This is an experimental package, and it's API can break at any time. Use at
+> your own discretion.
+
 This package provides the data classes for the usage recording feature in the
 Dart SDK.
 
